@@ -30,20 +30,27 @@ const UsuarioEdit: React.FC = () => {
 
   const handleSave = async () => {
     try {
+        toast.dismiss();
         await api.patch(`/usuario/${id}`, item);
-        toast.success(`Usuário ${id} salvo com sucesso!`); // Exib
+        toast.success(`Usuário ${id} salvo com sucesso!`); 
         navigate('/');
     } catch (error: any) {
       if (error.response && error.response.data) {
-        const { message, error: errorMessage, statusCode } = error.response.data;
-        
-        if (Array.isArray(message)) {
-          message.forEach((msg) => toast.error(msg, {autoClose: false}));
-        } else {
-          toast.error('Erro ao atualizar o usuário.');
-        }
+        const { message, statusCode } = error.response.data;
 
-        console.error(`Erro ${statusCode}: ${errorMessage}`, message);
+        switch (statusCode) {
+          case 400:
+            if (Array.isArray(message)) {
+              message.forEach((msg) => toast.error(msg, {autoClose: false}));
+            }
+            break;
+          case 409:
+            toast.error(message, {autoClose: false});
+            break;
+          default:
+            toast.error('Não foi possível atualizar o usuário.');
+            break;
+        }
       } else {
         toast.error('Erro desconhecido ao atualizar o usuário.');
         console.error('Erro desconhecido', error);
@@ -52,6 +59,7 @@ const UsuarioEdit: React.FC = () => {
   };
 
   const handleCancel = () => {
+    toast.dismiss();
     navigate('/');
   };
 

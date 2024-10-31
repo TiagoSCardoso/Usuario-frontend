@@ -17,6 +17,7 @@ const UsuarioAdd: React.FC = () => {
 
   const handleSave = async () => {
     try {
+      toast.dismiss();
       await api.post('/usuario', item); // Envia uma requisição POST para criar um novo registro
       toast.success(`Usuário '${item.nome}' adicionado com sucesso!`); // Exib
       navigate('/'); // Redireciona de volta ao grid
@@ -39,6 +40,7 @@ const UsuarioAdd: React.FC = () => {
   };
 
   const handleCancel = () => {
+    toast.dismiss();
     navigate('/'); // Redireciona de volta ao grid
   };
 

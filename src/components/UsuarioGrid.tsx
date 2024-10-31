@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../api';
 import { Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Typography, Box } from '@mui/material';
 import { Usuario } from '../types/usuario';
+import { toast } from 'react-toastify';
 
 const UsuarioGrid: React.FC = () => {
   const [items, setItems] = useState<Usuario[]>([]);
@@ -33,15 +34,16 @@ const UsuarioGrid: React.FC = () => {
     try {
       await api.delete(`/usuario/${id}`);
       setItems(items.filter((item) => item.id !== id));
-      console.log(`Item com ID ${id} excluído com sucesso`);
+      toast.success(`Item com ID ${id} excluído com sucesso`);
     } catch (error) {
+      toast.error('Erro ao excluir o item: ' + error);
       console.error('Erro ao excluir o item', error);
     }
   };
 
   return (
     <Container maxWidth="lg">
-      <Typography variant="h5" style={{ textAlign: 'center', alignContent: 'center', marginTop: '0px', marginBottom: '0px' }}>
+      <Typography variant="h5" style={{ textAlign: 'center', alignContent: 'center', marginTop: '10px', marginBottom: '0px' }}>
         Cadastro de usuários
       </Typography>
       <Box display="flex" justifyContent="flex-start" marginBottom="20px">
